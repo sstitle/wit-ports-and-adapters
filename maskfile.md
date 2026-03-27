@@ -12,20 +12,18 @@ echo "Hello World!"
 
 ## run
 
-> Generate C bindings from the greeter WIT interface into generated/c/
+> Build the greeter C bindings via nix (cached)
 
 ```bash
-mkdir -p generated/c
-wit-bindgen c wit/ --out-dir generated/c
-echo "Generated C bindings in generated/c/"
-ls generated/c/
+nix build .#greeter-c-bindings
+echo "C bindings at $(readlink result)/"
+ls "$(readlink result)/"
 ```
 
 ## greet-cpp (name)
 
-> Compile and run the C++ greeter adapter
+> Build and run the C++ greeter adapter via nix (cached)
 
 ```bash
-g++ -I. -o /tmp/greeter-cpp src/greeter.cpp
-/tmp/greeter-cpp "$name"
+nix run .#greeter-cpp -- "$name"
 ```

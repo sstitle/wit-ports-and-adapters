@@ -5,7 +5,7 @@
 #include <string>
 
 // Generated WIT interface for example:greeter/greeter@0.1.0
-#include "generated/c/greeter_world.h"
+#include "greeter_world.h"
 
 // --- WIT helper implementations (native build; no Wasm ABI glue needed) ---
 
