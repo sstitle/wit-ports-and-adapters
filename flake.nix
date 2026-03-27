@@ -11,10 +11,12 @@
     inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
+        # keep-sorted start
         "x86_64-linux"
         "aarch64-linux"
         "x86_64-darwin"
         "aarch64-darwin"
+        # keep-sorted end
       ];
 
       perSystem =
@@ -30,20 +32,25 @@
           treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
         in
         {
-          # Development shell with nickel and mask
+          
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
               # Core tools
               git
-              nickel
               mask
+              # keep-sorted start
+              gcc
+              wasm-tools
+              wit-bindgen
+              # keep-sorted end
             ];
 
             shellHook = ''
               echo "🚀 Development environment loaded!"
               echo "Available tools:"
-              echo "  - nickel: Configuration language"
               echo "  - mask: Task runner"
+              echo "  - wit-bindgen: Generate language bindings from WIT files"
+              echo "  - wasm-tools: Inspect and manipulate Wasm components"
               echo ""
               echo "Run 'mask --help' to see available tasks."
               echo "Run 'nix fmt' to format all files."
