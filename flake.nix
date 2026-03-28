@@ -39,18 +39,8 @@
               wit-bindgen c ${./wit} --out-dir $out
             '';
 
-            greeter-cpp = pkgs.stdenv.mkDerivation {
-              pname = "greeter-cpp";
-              version = "0.1.0";
-              src = ./src;
-              nativeBuildInputs = [ pkgs.gcc ];
-              buildPhase = ''
-                g++ -I${self'.packages.greeter-c-bindings} -o greeter greeter.cpp
-              '';
-              installPhase = ''
-                mkdir -p $out/bin
-                cp greeter $out/bin/greeter-cpp
-              '';
+            greeter-cpp = pkgs.callPackage ./default.nix {
+              greeter-c-bindings = self'.packages.greeter-c-bindings;
             };
           };
 
@@ -60,7 +50,9 @@
               git
               mask
               # keep-sorted start
-              gcc
+              clang
+              cmake
+              ninja
               wasm-tools
               wit-bindgen
               # keep-sorted end
