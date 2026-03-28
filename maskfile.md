@@ -2,28 +2,28 @@
 
 This is a [mask](https://github.com/jacobdeichert/mask) task runner file.
 
-## hello
-
-> This is an example command you can run with `mask hello`
-
-```bash
-echo "Hello World!"
-```
-
 ## run
 
-> Build the greeter C bindings via nix (cached)
+> Build Rust component, generate Python bindings, and run the Python host
 
 ```bash
-nix build .#greeter-c-bindings
-echo "C bindings at $(readlink result)/"
-ls "$(readlink result)/"
-```
+set -e
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+RUST_DIR="$ROOT/text-analysis/rust-component"
+PYTHON_DIR="$ROOT/text-analysis/python-host"
+WASM="$RUST_DIR/target/wasm32-unknown-unknown/release/text_analyzer.wasm"
 
-## greet-cpp (name)
+echo "==> [1/3] Building Rust component (wasm32-unknown-unknown)"
+cd "$RUST_DIR"
+cargo component build --release --target wasm32-unknown-unknown
+echo ""
 
-> Build and run the C++ greeter adapter via nix (cached)
+echo "==> [2/3] Generating Python bindings from .wasm"
+cd "$PYTHON_DIR"
+uv run python3 -m wasmtime.bindgen "$WASM" --out-dir text_analysis
+echo ""
 
-```bash
-nix run .#greeter-cpp -- "$name"
+echo "==> [3/3] Running Python host"
+cd "$PYTHON_DIR"
+uv run python host.py
 ```

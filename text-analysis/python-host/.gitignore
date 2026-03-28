@@ -1,0 +1,9 @@
+# Generated Python bindings — recreated by running:
+#   uv run python3 -m wasmtime.bindgen \
+#       ../rust-component/target/wasm32-wasip2/release/text_analyzer.wasm \
+#       --out-dir text_analysis
+text_analysis/
+
+.venv/
+__pycache__/
+*.pyc

@@ -1,5 +1,5 @@
 {
-  description = "Development environment with nickel and mask";
+  description = "Cross-language Wasm Component Model demo: Rust guest, Python host, shared WIT";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -21,40 +21,24 @@
       perSystem = { config, self', inputs', pkgs, system, ... }:
         let treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
         in {
-          packages = {
-            greeter-c-bindings = pkgs.runCommand "greeter-c-bindings" {
-              nativeBuildInputs = [ pkgs.wit-bindgen ];
-            } ''
-              wit-bindgen c ${./wit} --out-dir $out
-            '';
-
-            greeter-cpp = pkgs.callPackage ./default.nix {
-              greeter-c-bindings = self'.packages.greeter-c-bindings;
-            };
-          };
-
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
-              # Core tools
+              # keep-sorted start
+              cargo-component
               git
               mask
-              # keep-sorted start
-              clang
-              cmake
-              ninja
+              rustup
+              uv
               wasm-tools
               wit-bindgen
               # keep-sorted end
             ];
 
             shellHook = ''
-              echo "🚀 Development environment loaded!"
-              echo "Available tools:"
-              echo "  - mask: Task runner"
-              echo "  - wit-bindgen: Generate language bindings from WIT files"
-              echo "  - wasm-tools: Inspect and manipulate Wasm components"
-              echo ""
-              echo "Run 'mask --help' to see available tasks."
+              rustup toolchain install stable --no-self-update 2>/dev/null || true
+              rustup target add wasm32-unknown-unknown 2>/dev/null || true
+              echo "Development environment ready."
+              echo "Run 'mask run' to build the Rust component, generate Python bindings, and run the demo."
               echo "Run 'nix fmt' to format all files."
             '';
           };

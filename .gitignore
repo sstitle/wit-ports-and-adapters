@@ -1,4 +1,4 @@
 result*
 .direnv/
 scratchpad.md
-generated/
+target/

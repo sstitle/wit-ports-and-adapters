@@ -1,0 +1,15 @@
+[package]
+name = "text-analyzer"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wit-bindgen = { version = "0.24", default-features = false, features = ["realloc", "macros"] }
+wee_alloc = "0.4"
+
+[package.metadata.component]
+package = "example:text-analysis"
+target = { path = "../wit" }
