@@ -7,31 +7,20 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
-  outputs =
-    inputs@{ self, flake-parts, ... }:
+  outputs = inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         # keep-sorted start
-        "x86_64-linux"
+        "aarch64-darwin"
         "aarch64-linux"
         "x86_64-darwin"
-        "aarch64-darwin"
+        "x86_64-linux"
         # keep-sorted end
       ];
 
-      perSystem =
-        {
-          config,
-          self',
-          inputs',
-          pkgs,
-          system,
-          ...
-        }:
-        let
-          treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-        in
-        {
+      perSystem = { config, self', inputs', pkgs, system, ... }:
+        let treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        in {
           packages = {
             greeter-c-bindings = pkgs.runCommand "greeter-c-bindings" {
               nativeBuildInputs = [ pkgs.wit-bindgen ];
@@ -74,9 +63,7 @@
           formatter = treefmtEval.config.build.wrapper;
 
           # for `nix flake check`
-          checks = {
-            formatting = treefmtEval.config.build.check self;
-          };
+          checks = { formatting = treefmtEval.config.build.check self; };
         };
     };
 }

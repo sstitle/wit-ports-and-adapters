@@ -5,14 +5,9 @@ pkgs.clangStdenv.mkDerivation {
   version = "0.1.0";
   src = ./src;
 
-  nativeBuildInputs = [
-    pkgs.cmake
-    pkgs.ninja
-  ];
+  nativeBuildInputs = [ pkgs.cmake pkgs.ninja ];
 
-  cmakeFlags = [
-    "-DGREETER_BINDINGS_DIR=${greeter-c-bindings}"
-  ];
+  cmakeFlags = [ "-DGREETER_BINDINGS_DIR=${greeter-c-bindings}" ];
 
   installPhase = ''
     mkdir -p $out/bin

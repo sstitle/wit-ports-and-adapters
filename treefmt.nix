@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   projectRootFile = "flake.nix";
   programs = {
     # keep-sorted start
@@ -9,8 +8,8 @@
 
     mdformat = {
       enable = true;
-      package = pkgs.mdformat.withPlugins (
-        ps: with ps; [
+      package = pkgs.mdformat.withPlugins (ps:
+        with ps; [
           # keep-sorted start
           mdformat-footnote
           mdformat-frontmatter
@@ -24,8 +23,7 @@
             pytestCheckPhase = "";
             # keep-sorted end
           })
-        ]
-      );
+        ]);
     };
   };
 }
